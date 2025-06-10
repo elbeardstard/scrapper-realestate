@@ -1,7 +1,6 @@
 import requests
 from urllib.parse import urlencode
 
-# Realtor.ca API endpoint for map search
 API_URL = "https://api2.realtor.ca/Listing.svc/PropertySearch_Post"
 
 HEADERS = {
@@ -19,22 +18,32 @@ def fetch_listings():
         "TransactionTypeId": 2,
         "SortOrder": "A",
         "SortBy": "6",
-        "IndividualId": 1967088,  # <-- Replace with agent ID
+        "IndividualId": 1967088,
         "Version": "7.0"
     }
 
     response = requests.post(API_URL, json=payload, headers=HEADERS)
-    data = response.json()
+
+    # 🔒 FIX: Check if response is valid JSON
+    try:
+        data = response.json()
+    except Exception as e:
+        print("⚠️ Failed to decode JSON:", e)
+        return []
 
     listings = []
 
     for listing in data.get("Results", []):
-        listings.append({
-            "id": listing.get("MlsNumber"),
-            "address": listing.get("Property", {}).get("Address", {}).get("AddressText", "N/A"),
-            "city": listing.get("Property", {}).get("Address", {}).get("City", "N/A"),
-            "slug": listing.get("MlsNumber"),
-            "image_urls": listing.get("Property", {}).get("PhotoUrls", [])
-        })
+        try:
+            listings.append({
+                "id": listing.get("MlsNumber"),
+                "address": listing.get("Property", {}).get("Address", {}).get("AddressText", "N/A"),
+                "city": listing.get("Property", {}).get("Address", {}).get("City", "N/A"),
+                "slug": listing.get("MlsNumber"),
+                "image_urls": listing.get("Property", {}).get("PhotoUrls", [])
+            })
+        except Exception as e:
+            print(f"⚠️ Skipping listing due to error: {e}")
+            continue
 
     return listings
