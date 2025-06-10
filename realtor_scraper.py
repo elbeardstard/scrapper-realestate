@@ -10,17 +10,21 @@ HEADERS = {
 
 def fetch_listings():
     payload = {
-        "CultureId": 1,
-        "ApplicationId": 1,
-        "RecordsPerPage": 10,
-        "MaximumResults": 10,
-        "PropertySearchTypeId": 1,
-        "TransactionTypeId": 2,
-        "SortOrder": "A",
-        "SortBy": "6",
-        "IndividualId": 1967088,
-        "Version": "7.0"
-    }
+    "CultureId": 1,
+    "ApplicationId": 1,
+    "RecordsPerPage": 10,
+    "MaximumResults": 10,
+    "PropertySearchTypeId": 1,
+    "TransactionTypeId": 2,
+    "SortOrder": "A",
+    "SortBy": "6",
+    "IndividualId": 1967088,
+    "LatitudeMin": 45.3,
+    "LatitudeMax": 45.6,
+    "LongitudeMin": -76.2,
+    "LongitudeMax": -75.3,
+    "Version": "7.0"
+}
 
     response = requests.post(API_URL, json=payload, headers=HEADERS)
 
